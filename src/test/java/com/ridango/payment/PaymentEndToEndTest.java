@@ -4,6 +4,7 @@ import com.ridango.payment.config.util.BusinessException;
 import com.ridango.payment.dto.PaymentDTO;
 import com.ridango.payment.entity.Account;
 import com.ridango.payment.repository.AccountRepository;
+import com.ridango.payment.repository.PaymentRepository;
 import com.ridango.payment.service.PaymentService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -17,6 +18,7 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = PaymentApplication.class)
@@ -29,6 +31,9 @@ public class PaymentEndToEndTest {
 
     @Mock
     AccountRepository accountRepository;
+
+    @Mock
+    PaymentRepository paymentRepository;
 
     @Test
     void testSenderAccountNotPresent() throws Exception {
@@ -143,6 +148,7 @@ public class PaymentEndToEndTest {
                 .balance(new BigDecimal(50.00)).transactionInProgress(false).build()));
         when(accountRepository.findById(100222L)).thenReturn(Optional.of(Account.builder().id(100222L)
                 .balance(new BigDecimal(50.00)).transactionInProgress(false).build()));
+        when(paymentRepository.save(any())).thenReturn(null);
         assertDoesNotThrow(() -> paymentService.processPayment(paymentDTO));
 
         Mockito.verify(paymentService, Mockito.times(1)).validateSenderFormat(paymentDTO);
