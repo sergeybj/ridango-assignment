@@ -37,7 +37,7 @@ public class PaymentService {
     }
 
     @Transactional
-    public void processPayment(PaymentDTO paymentDTO) throws Exception {
+    public PaymentDTO processPayment(PaymentDTO paymentDTO) throws Exception {
 
         if (!validateSenderFormat(paymentDTO)) {
             throw new BusinessException(BusinessError.SENDER_EMPTY_OR_INVALID_FORMAT);
@@ -73,7 +73,7 @@ public class PaymentService {
             throw new BusinessException(BusinessError.AMOUNT_ZERO);
         }
 
-        sender.ifPresent(accountSender -> {
+        PaymentDTO paid = sender.map(accountSender -> {
 
             if (accountSender.getTransactionInProgress()) {
                 throw new BusinessException(BusinessError.COLLISION_OF_TRANSACTIONS);
@@ -87,7 +87,7 @@ public class PaymentService {
                 throw new BusinessException(BusinessError.AMOUNT_INSUFFICIENT);
             }
 
-            receiver.ifPresent(accountReceiver -> {
+            PaymentDTO paidDTO = receiver.map(accountReceiver -> {
                 BigDecimal newSenderAmount = accountSender.getBalance().subtract(amount);
                 BigDecimal newReceiverAmount = accountReceiver.getBalance().add(amount);
 
@@ -99,16 +99,17 @@ public class PaymentService {
                         .receiver(accountReceiver)
                         .amount(new BigDecimal(paymentDTO.getAmount()))
                         .timestamp(LocalDateTime.now()).build();
-                paymentRepository.save(payment);
+                payment = paymentRepository.save(payment);
 
                 //Release Sender Account Lock
                 accountSender.setTransactionInProgress(false);
                 accountRepository.save(accountSender);
-            });
 
-        });
-
-
+                return entityToDto(payment);
+            }).orElse(null);
+            return paidDTO;
+        }).orElse(null);
+        return paid;
     }
 
     public Boolean validateSenderFormat(PaymentDTO paymentDTO) {

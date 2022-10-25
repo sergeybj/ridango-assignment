@@ -19,8 +19,8 @@ public class PaymentController {
 
     @CrossOrigin(origins = "http://localhost:8080")
     @PostMapping("/process")
-    void processPayment(@RequestBody PaymentDTO paymentDTO) throws Exception {
-        paymentService.processPayment(paymentDTO);
+    public PaymentDTO processPayment(@RequestBody PaymentDTO paymentDTO) throws Exception {
+        return paymentService.processPayment(paymentDTO);
     }
 
     @GetMapping("/searchAllProcessedPayments")
