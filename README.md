@@ -1,10 +1,10 @@
 ## Comments from Sergey, 25.10.2022:
 
-Postman can be used for testing implemented API.
+* Postman can be used for testing implemented API.
 Swagger2 is also enabled for testing API:
 ![image](https://user-images.githubusercontent.com/11816438/197779321-a5b7db49-4aeb-44a6-be7e-acb8e45d7ee9.png)
 
-Payment can be done via POST, sending JSON to "localhost:8080/api/payment/process":
+* Payment can be done via POST, sending JSON to "localhost:8080/api/payment/process":
 
 Request body
         ```
@@ -15,13 +15,13 @@ Request body
 }
         ```
 
-All accounts data is available via:
+* All accounts data is available via:
 GET: localhost:8080/api/account/searchAll
 
-All processed payments data is available via:
+* All processed payments data is available via:
 GET: localhost:8080/api/payment/searchAllProcessedPayments
 
-If result is OK, then success PaymentDTO is retrieved:
+* If result is OK, then success PaymentDTO is retrieved:
         ```
 {
     "senderAccountId": "100221",
@@ -31,7 +31,7 @@ If result is OK, then success PaymentDTO is retrieved:
 }
         ```
 
-If one of 9 possible exceptions is thrown, these are propagated in HTTP response with status 400:
+* If one of 9 possible exceptions is thrown, these are propagated in HTTP response with status 400:
 
 ![image](https://user-images.githubusercontent.com/11816438/197784898-ca9aaa2f-7931-4a6e-9993-9a2a3068caae.png)
 
