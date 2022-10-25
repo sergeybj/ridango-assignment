@@ -7,11 +7,13 @@ Swagger2 is also enabled for testing API:
 Payment can be done via POST, sending JSON to "localhost:8080/api/payment/process":
 
 Request body
+        ```
 {
     "senderAccountId": "100221",
     "receiverAccountId": "100222",
     "amount": "100.00"
 }
+        ```
 
 All accounts data is available via:
 GET: localhost:8080/api/account/searchAll
@@ -20,12 +22,14 @@ All processed payments data is available via:
 GET: localhost:8080/api/payment/searchAllProcessedPayments
 
 If result is OK, then success PaymentDTO is retrieved:
+        ```
 {
     "senderAccountId": "100221",
     "receiverAccountId": "100222",
     "amount": "1.00",
     "timestamp": "2022-10-25T16:21:47.959926800"
 }
+        ```
 
 If one of 9 possible exceptions is thrown, these are propagated in HTTP response with status 400:
 
